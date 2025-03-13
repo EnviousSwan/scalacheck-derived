@@ -11,7 +11,7 @@ object arbitrary extends UnionArbitraries
  * This does not provide derivation of `Shrink`-instances as that might not always be desired.
  * You can opt in to derivation of `Shrink`-instances via `shrink`.
  */
-object scalacheck extends UnionArbitraries with UnionCogens
+object scalacheck extends UnionArbitraries, UnionCogens
 
 /**
  * Public "API-entry-point" for derivation of `Cogen`-instances only for union types.

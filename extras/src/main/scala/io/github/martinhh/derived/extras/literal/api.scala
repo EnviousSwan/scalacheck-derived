@@ -14,7 +14,7 @@ object arbitrary extends LiteralArbitraries
  *
  * (No derivation for `Shrink` is provided because there is no sense in shrinking single-value types.)
  */
-object scalacheck extends LiteralArbitraries with LiteralCogens
+object scalacheck extends LiteralArbitraries, LiteralCogens
 
 /**
  * Public "API-entry-point" for derivation of `Cogen`-instances for literal types.

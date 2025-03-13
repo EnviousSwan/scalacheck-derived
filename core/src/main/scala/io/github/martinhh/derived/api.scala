@@ -11,7 +11,7 @@ object arbitrary extends ArbitraryDeriving
  * This does not provide derivation of `Shrink`-instances as that might not always be desired.
  * You can opt in to derivation of `Shrink`-instances via `shrink`.
  */
-object scalacheck extends ArbitraryDeriving with CogenDeriving
+object scalacheck extends ArbitraryDeriving, CogenDeriving
 
 /**
  * Public "API-entry-point" for derivation of `Cogen`-instances.

@@ -11,7 +11,7 @@ trait ArbitrarySuite extends munit.BaseFunSuite:
     expectedGen: Gen[T],
     nTests: Int = 100
   )(using arbUnderTest: Arbitrary[T]): Unit =
-    (0 until nTests).foldLeft(Seed.random()) { case (seed, _) =>
+    (0 until nTests).foldLeft(Seed.random()) { (seed, _) =>
       val expected = expectedGen(Parameters.default, seed)
       val derived = arbUnderTest.arbitrary(Parameters.default, seed)
       assertEquals(derived, expected, s"Differing values for seed $seed")

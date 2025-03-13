@@ -13,7 +13,7 @@ trait CogenSumInstanceSummoner[T, Elem] extends SumInstanceSummoner[T, Elem, Cog
 object CogenSumInstanceSummoner
   extends SumInstanceSummonerCompanion[Cogen, CogenSumInstanceSummoner]:
   protected def apply[T, Elem](makeCogen: => Cogen[Elem]): CogenSumInstanceSummoner[T, Elem] =
-    new CogenSumInstanceSummoner[T, Elem]:
+    new:
       def deriveOrSummonSumInstance: Cogen[Elem] = makeCogen
 
   override protected inline def derive[Elem]: Cogen[Elem] =

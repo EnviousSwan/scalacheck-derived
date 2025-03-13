@@ -33,7 +33,7 @@ case class BigCaseClass(
  * (This is only possible with Scala 3.4.0 or higher).
  */
 // TODO: integrate into regular tests once we skip to next LTS (3.7.x)
-class LargeElemTypesSuite extends test.ArbitrarySuite with test.CogenSuite with test.ShrinkSuite:
+class LargeElemTypesSuite extends test.ArbitrarySuite, test.CogenSuite, test.ShrinkSuite:
 
   // since we use the derived instances as expected instances, these tests only test that derivation compiles and
   // that no exceptions are thrown at runtime:

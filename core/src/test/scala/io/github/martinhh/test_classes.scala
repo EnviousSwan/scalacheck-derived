@@ -81,8 +81,8 @@ object SimpleCaseClass:
   val expectedShrink: Shrink[SimpleCaseClass] =
     given shrinkTuple: Shrink[(Int, String, Double)] = Shrink.shrinkTuple3
     Shrink.xmap[(Int, String, Double), SimpleCaseClass](
-      SimpleCaseClass.apply.tupled(_),
-      a => (a.x, a.y, a.z)
+      from = SimpleCaseClass.apply,
+      to = Tuple.fromProductTyped
     )
 
 case class CaseClassWithContainers(
@@ -164,8 +164,8 @@ object AbstractSubClass:
       given Shrink[SimpleCaseClass] = SimpleCaseClass.expectedShrink
       given shrinkTuple: Shrink[(Int, String, SimpleCaseClass)] = Shrink.shrinkTuple3
       Shrink.xmap[(Int, String, SimpleCaseClass), SubclassA](
-        SubclassA.apply.tupled(_),
-        a => (a.a, a.b, a.nestedSimple)
+        from = SubclassA.apply,
+        to = Tuple.fromProductTyped
       )
 
   case class SubclassB(nestedSimple: SimpleADT) extends AbstractSubClass[SimpleADT](ABC.B)
@@ -197,8 +197,8 @@ object AbstractSubClass:
       given Shrink[ABC] = ABC.expectedShrink
       given shrinkTuple: Shrink[(String, Double, ABC)] = Shrink.shrinkTuple3
       Shrink.xmap[(String, Double, ABC), SubclassC](
-        SubclassC.apply.tupled(_),
-        a => (a.c, a.d, a.anotherLetter)
+        from = SubclassC.apply,
+        to = Tuple.fromProductTyped
       )
 
 object ComplexADTWithNestedMembers:
@@ -337,8 +337,8 @@ object RecursiveList:
       case c: Cns[T] =>
         Shrink
           .xmap[(T, RecursiveList[T]), Cns[T]](
-            { case (t, ts) => Cns(t, ts) },
-            cns => (cns.t, cns.ts)
+            from = Cns.apply,
+            to = Tuple.fromProductTyped
           )(Shrink.shrinkTuple2(using shrinkT, expectedShrink))
           .shrink(c)
       case Nl => Stream.empty
@@ -397,8 +397,8 @@ object NestedSumsRecursiveList:
       case c: Cns[T] =>
         Shrink
           .xmap[(T, NestedSumsRecursiveList[T]), Cns[T]](
-            { case (t, ts) => Cns(t, ts) },
-            cns => (cns.t, cns.ts)
+            from = Cns.apply,
+            to = Tuple.fromProductTyped
           )(Shrink.shrinkTuple2(using shrinkT, expectedShrink))
           .shrink(c)
       case Nl => Stream.empty
@@ -531,8 +531,8 @@ object MaybeMaybeList:
     lazy val shrinkTuple: Shrink[(T, MaybeMaybe[MaybeMaybeList[T]])] =
       Shrink.shrinkTuple2(using shrinkT, MaybeMaybe.expectedShrink(expectedShrink))
     Shrink.xmap[(T, MaybeMaybe[MaybeMaybeList[T]]), MaybeMaybeList[T]](
-      { case (head, tail) => MaybeMaybeList(head, tail) },
-      mml => (mml.head, mml.tail)
+      from = MaybeMaybeList.apply,
+      to = Tuple.fromProductTyped
     )(shrinkTuple)
 
 enum DirectRecursion:
@@ -581,7 +581,7 @@ object SealedDiamond:
   sealed trait SubtraitA extends SealedDiamond
   sealed trait SubtraitB extends SealedDiamond
   case object Foo extends SealedDiamond
-  case object Bar extends SubtraitA with SubtraitB
+  case object Bar extends SubtraitA, SubtraitB
 
   def expectedGen: Gen[SealedDiamond] =
     Gen.oneOf(Gen.const(Bar), Gen.const(Foo))

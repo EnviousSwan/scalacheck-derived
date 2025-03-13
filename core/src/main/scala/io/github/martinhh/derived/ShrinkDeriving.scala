@@ -15,7 +15,7 @@ private trait ShrinkSumInstanceSummoner[T, Elem] extends SumInstanceSummoner[T, 
 private object ShrinkSumInstanceSummoner
   extends SumInstanceSummonerCompanion[Shrink, ShrinkSumInstanceSummoner]:
   protected def apply[T, Elem](makeShrink: => Shrink[Elem]): ShrinkSumInstanceSummoner[T, Elem] =
-    new ShrinkSumInstanceSummoner[T, Elem]:
+    new:
       def deriveOrSummonSumInstance: Shrink[Elem] = makeShrink
 
   override protected inline def derive[Elem]: Shrink[Elem] =
@@ -53,9 +53,8 @@ private trait ShrinkDeriving:
     acc: LazyList[T],
     shrinks: List[Shrink[Any]]
   ): LazyList[T] =
-    if (i >= size || shrinks.isEmpty) {
-      acc
-    } else {
+    if i >= size || shrinks.isEmpty then acc
+    else {
       val shrinkI = shrinks.head
       val nonEmptyT = t.asInstanceOf[T & NonEmptyTuple]
       val elemI = nonEmptyT(i)

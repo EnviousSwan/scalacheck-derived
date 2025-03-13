@@ -21,7 +21,7 @@ private trait GensSumInstanceSummoner[T, Elem] extends SumInstanceSummoner[T, El
 private object GensSumInstanceSummoner
   extends SumInstanceSummonerCompanion[Gens, GensSumInstanceSummoner]:
   protected def apply[T, Elem](makeGens: => Gens[Elem]): GensSumInstanceSummoner[T, Elem] =
-    new GensSumInstanceSummoner[T, Elem]:
+    new:
       def deriveOrSummonSumInstance: Gens[Elem] = makeGens
 
   override protected inline def derive[Elem]: Gens[Elem] =
@@ -37,7 +37,10 @@ private object Gens:
     // (only) for the very first member of a product, some extra lazyness is needed to
     // ensure we don't end up in an endless loop in case of recursive structures
     def safeGen[A](aArb: Arbitrary[A]): Gen[A] =
-      if (isHead) Gen.lzy(aArb.arbitrary) else aArb.arbitrary
+      if isHead
+      then Gen.lzy(aArb.arbitrary)
+      else aArb.arbitrary
+
     arbs match {
       case xArb :: Nil =>
         safeGen(xArb).map(x => Tuple.apply(x))

@@ -11,7 +11,7 @@ import org.scalacheck.Cogen
 import org.scalacheck.Gen
 import org.scalacheck.Shrink
 
-class ExtrasSuite extends test.ArbitrarySuite with test.CogenSuite with test.ShrinkSuite:
+class ExtrasSuite extends test.ArbitrarySuite, test.CogenSuite, test.ShrinkSuite:
 
   test("Arbitrary for union of two types") {
     type TheUnion = String | Int
